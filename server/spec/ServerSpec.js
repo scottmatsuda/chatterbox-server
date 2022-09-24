@@ -8,7 +8,6 @@ describe('Node Server Request Listener Function', function() {
     // but we want to test our function's behavior totally independent of the server code
     var req = new stubs.request('/classes/messages', 'GET');
     var res = new stubs.response();
-
     handler.requestHandler(req, res);
 
     expect(res._responseCode).to.equal(200);
@@ -91,7 +90,7 @@ describe('Node Server Request Listener Function', function() {
     expect(res._ended).to.equal(true);
   });
 
-
+  // WE ADDED THESE TESTS ----------------------------------------------------------------
   it('Should 404 when trying to delete inside of /classes/messages', function() {
     var req = new stubs.request('/classes/messages', 'DELETE');
     var res = new stubs.response();
@@ -128,7 +127,7 @@ describe('Node Server Request Listener Function', function() {
     expect(res._ended).to.equal(true);
   });
 
-  it('Should not send back an string', function() {
+  it('Should not send back a string', function() {
     var req = new stubs.request('/classes/messages', 'GET');
     var res = new stubs.response();
 
@@ -137,6 +136,18 @@ describe('Node Server Request Listener Function', function() {
     var parsedBody = JSON.parse(res._data);
     expect(parsedBody).not.to.be.an('string');
     expect(res._ended).to.equal(true);
+  });
+
+  it('[ServerSpec.js] Should check to make sure every message has a username', function() {
+    var stubMsg = {
+      text: 'Do my bidding!'
+    };
+    var req = new stubs.request('/classes/messages', 'POST', stubMsg);
+    var res = new stubs.response();
+
+    handler.requestHandler(req, res);
+
+    expect(res._responseCode).to.equal(404);
   });
 
 });
